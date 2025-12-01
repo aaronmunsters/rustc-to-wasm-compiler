@@ -20,9 +20,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@master
         with:
           components: "rustfmt, clippy"
+          toolchain: nightly
+          targets: wasm32-unknown-unknown
       - uses: cargo-bins/cargo-binstall@main
       - run: |
             cargo binstall --no-confirm cargo-nextest
