@@ -1,0 +1,23 @@
+[package]
+name = "rustc-to-wasm-compiler"
+version = "0.1.0"
+edition = "2024"
+
+description = "Rust to Wasm compiler by calling out to `rustc` under the hood"
+license = "MIT"
+repository = "https://github.com/aaronmunsters/rustc-to-wasm-compiler"
+readme = "README.md"
+keywords = ["Rust", "compiler", "wasm"]
+categories = ["wasm", "compilers"]
+
+[dependencies]
+tempfile = { version = "3.23" }
+thiserror = { version = "2" }
+semver = { version = "1" }
+# TODO: can I update this dependency after my PR has been accepted?
+ctreg = { git = "https://github.com/aaronmunsters/ctreg", branch = "update-thiserror" }
+
+[dev-dependencies]
+wasmtime = { version = "39" }
+anyhow = { version = "1" }
+rayon = { version = "1" }
