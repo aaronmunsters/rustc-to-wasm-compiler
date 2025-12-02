@@ -106,6 +106,8 @@ impl Configuration {
         self.stack_size.include_in(&mut command);
         // Set wasm target
         command.arg("--target=wasm32-unknown-unknown");
+        // Allow omitting a `main` function
+        command.arg("--crate-type=cdylib");
         // Set output path
         command.arg("-o").arg(output_path);
 

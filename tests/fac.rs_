@@ -1,6 +1,3 @@
-#![no_main]
-#![no_std]
-
 #[no_mangle]
 pub extern "C" fn fac(n: i32) -> i32 {
     if n == 0 {
@@ -8,9 +5,4 @@ pub extern "C" fn fac(n: i32) -> i32 {
     } else {
         return n * fac(n - 1);
     }
-}
-
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    loop {}
 }

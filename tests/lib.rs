@@ -73,9 +73,6 @@ fn test_different_variants() {
 #[test]
 fn recursive_input() -> anyhow::Result<()> {
     let source = r#"
-        #![no_main]
-        #![no_std]
-
         #[no_mangle]
         pub extern "C" fn fac(n: i32) -> i32 {
             if n == 0 {
@@ -83,11 +80,6 @@ fn recursive_input() -> anyhow::Result<()> {
             } else {
                 return n * fac(n - 1);
             }
-        }
-
-        #[panic_handler]
-        fn panic(_info: &core::panic::PanicInfo) -> ! {
-            loop {}
         }
     "#;
 
@@ -106,19 +98,11 @@ fn recursive_input() -> anyhow::Result<()> {
 #[test]
 fn unsafe_c_overflow() -> anyhow::Result<()> {
     let source = r#"
-        #![no_main]
-        #![no_std]
-
         #[no_mangle]
         pub extern "C" fn overflow(a: i32, b: i32) -> i32 {
             let (res, overflow) = a.overflowing_add(b);
             let _ = overflow; // overflow is ignored
             res
-        }
-
-        #[panic_handler]
-        fn panic(_info: &core::panic::PanicInfo) -> ! {
-            loop {}
         }
     "#;
 
@@ -200,7 +184,7 @@ fn debugging_info_included() {
         debug_files.len()
     };
 
-    assert_eq!(debug_files_len_for(Debugging::Enabled, Profile::O0), 3);
+    assert_eq!(debug_files_len_for(Debugging::Enabled, Profile::O0), 50);
     assert_eq!(debug_files_len_for(Debugging::Disabled, Profile::O3), 0);
 }
 
