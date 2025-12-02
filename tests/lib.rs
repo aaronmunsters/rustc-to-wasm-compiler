@@ -179,6 +179,72 @@ fn assert_outcome<Params: WasmParams, Results: WasmResults + Eq + Debug>(
 }
 
 #[test]
+fn debugging_info_included() {
+    use wasmito_addr2line::Module;
+
+    let partial_config = ConfigurationBuilder::init()
+        .stack_size(StackSize::Unspecified)
+        .filename(Filename::Unspecified)
+        .profile(Profile::O0)
+        .source(FAC_SOURCE.into());
+
+    let debug_files_len_for = |debug, profile| {
+        let debuggable = partial_config
+            .clone()
+            .debugging(debug)
+            .profile(profile)
+            .build();
+        let debuggable = Compiler::compile(&debuggable).unwrap();
+        let debuggable = Module::new(debuggable);
+        let debug_files = debuggable.files().unwrap();
+        debug_files.len()
+    };
+
+    assert_eq!(debug_files_len_for(Debugging::Enabled, Profile::O0), 3);
+    assert_eq!(debug_files_len_for(Debugging::Disabled, Profile::O3), 0);
+}
+
+#[test]
+fn optimizations_affect() {
+    let partial_config = ConfigurationBuilder::init()
+        .stack_size(StackSize::Unspecified)
+        .debugging(Debugging::Enabled)
+        .filename(Filename::Unspecified)
+        .source(FAC_SOURCE.into());
+
+    let module_len_for = |profile| {
+        let config = partial_config.clone().profile(profile).build();
+        let module = Compiler::compile(&config).unwrap();
+        module.len()
+    };
+
+    let profiles = [Profile::O0, Profile::O1, Profile::O2, Profile::O3];
+    let lengths = profiles.map(module_len_for);
+    assert_ne!(lengths[0], lengths[1]);
+    assert_ne!(lengths[1], lengths[2]);
+    // assert_ne!(lengths[2], lengths[3]); // --> No visible difference between `Profile::O2` && `Profile::O3`
+}
+
+#[test]
+fn stack_size_configuration_affect() {
+    let partial_config = ConfigurationBuilder::init()
+        .profile(Profile::O3)
+        .debugging(Debugging::Disabled)
+        .filename(Filename::Unspecified)
+        .source(FAC_SOURCE.into());
+
+    let module_len_for = |stacksize| {
+        let config = partial_config.clone().stack_size(stacksize).build();
+        let module = Compiler::compile(&config).unwrap();
+        module.len()
+    };
+
+    let profiles = [StackSize::Unspecified, StackSize::Configured(2_u32.pow(4))];
+    let lengths = profiles.map(module_len_for);
+    assert_ne!(lengths[0], lengths[1]);
+}
+
+#[test]
 fn configuration_settings() {
     let config = ConfigurationBuilder::init()
         .debugging(Debugging::Disabled)

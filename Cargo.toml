@@ -16,6 +16,7 @@ thiserror = { version = "2" }
 semver = { version = "1" }
 # TODO: can I update this dependency after my PR has been accepted?
 ctreg = { git = "https://github.com/aaronmunsters/ctreg", branch = "update-thiserror" }
+wasmito-addr2line = { git = "https://github.com/aaronmunsters/wasmito-tools", rev = "dee3e0c2fedf1693595d26674aa1e69ac4813274" }
 
 [dev-dependencies]
 wasmtime = { version = "39" }
