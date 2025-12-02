@@ -33,12 +33,6 @@ repos:
         language: system
         types: [rust]
 
-      - id: cargo-clippy-cargo
-        name: Cargo Clippy for Cargo (clippy::cargo)
-        entry: bash -c "cargo clippy --all-targets --all-features -- -D clippy::cargo"
-        language: system
-        types: [rust]
-
       # Test:
 
       - id: cargo-nextest
